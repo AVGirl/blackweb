@@ -28,15 +28,16 @@ date=`date +%d/%m/%Y" "%H:%M:%S`
 bw=~/blackweb
 route=/etc/acl
 
-# DEL OLD REPOSITORY
+# DEL OLD REPOSITORY AND FILES
 if [ -d $bw ]; then rm -rf $bw; fi
-rm -rf /etc/acl/{blackweb,blackdomains,whitedomains}.txt >/dev/null 2>&1
 
 # GIT CLONE BLACLISTWEB
 echo
 echo "Download Blackweb..."
 git clone --depth=1 https://github.com/maravento/blackweb.git  >/dev/null 2>&1
 echo "OK"
+
+# CHECKING SUM
 echo
 echo "Checking Sum..."
 cd $bw/bl
@@ -47,8 +48,8 @@ b=$(cat blackweb.md5 | awk '{print $1}')
 	then 
 		echo "Sum Matches"
 		cd ..
-		sed -e '/^#/d' blackurls.txt | sort -u >> bl/bls.txt
-		rm -rf bl/blackweb.md5 bl/blackweb.tar.gz*
+		sed -e '/^#/d' blackurls.txt | sort -u >> bl/bltmp.txt
+		rm bl/blackweb.md5 bl/blackweb.tar.gz*
 		echo "OK"
 	else
 		echo "Bad Sum. Abort"
@@ -58,17 +59,17 @@ b=$(cat blackweb.md5 | awk '{print $1}')
 		exit
 fi
 
-# DOWNLOAD BL
+# DOWNLOAD PUBLIC BLS
 echo
 echo "Download Public BLs..."
 
+# FILES
 function bldownload() {
-    wget -q -c --retry-connrefused -t 0 "$1" -O - | sort -u >> bl/bls.txt
+    wget -q -c --retry-connrefused -t 0 "$1" -O - | sort -u >> bl/bltmp.txt
 }
 	bldownload 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml' && sleep 1
 	bldownload 'http://malwaredomains.lehigh.edu/files/justdomains' && sleep 1
 	bldownload 'https://easylist-downloads.adblockplus.org/malwaredomains_full.txt' && sleep 1
-	bldownload 'http://www.passwall.com/blacklist.txt' && sleep 1
 	bldownload 'https://zeustracker.abuse.ch/blocklist.php?download=squiddomain' && sleep 1
 	bldownload 'http://someonewhocares.org/hosts/hosts' && sleep 1
 	bldownload 'http://winhelp2002.mvps.org/hosts.txt' && sleep 1
@@ -85,27 +86,40 @@ function bldownload() {
 	bldownload 'http://osint.bambenekconsulting.com/feeds/dga-feed.txt' && sleep 1
 	bldownload 'http://malc0de.com/bl/ZONES' && sleep 1
 	bldownload 'https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts' && sleep 1
+	bldownload 'https://db.aa419.org/fakebankslist.php' && sleep 1
+	bldownload 'https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/_generator_lists/bad-referrers.list' && sleep 1
+	bldownload 'https://raw.githubusercontent.com/mitchellkrogza/The-Big-List-of-Hacked-Malware-Web-Sites/master/.dev-tools/_strip_domains/domains.txt' && sleep 1
+	bldownload 'https://raw.githubusercontent.com/mitchellkrogza/Badd-Boyz-Hosts/master/PULL_REQUESTS/domains.txt' && sleep 1
+	bldownload 'https://raw.githubusercontent.com/azet12/KADhosts/master/KADhosts.txt' && sleep 1
+	bldownload 'https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt' && sleep 1
+	#bldownload 'http://www.passwall.com/blacklist.txt' && sleep 1
 
 function blzip() {
-    wget -q -c --retry-connrefused -t 0 "$1" && unzip -p domains.zip >> bl/bls.txt
+    wget -q -c --retry-connrefused -t 0 "$1" && unzip -p domains.zip >> bl/bltmp.txt
 }
 	blzip 'http://www.malware-domains.com/files/domains.zip' && sleep 1
 
+function superh() {
+    wget -q -c --retry-connrefused -t 0 "$1" && unzip -p superhosts.deny.zip >> bl/bltmp.txt
+}
+	superh 'https://raw.githubusercontent.com/mitchellkrogza/Ultimate.Hosts.Blacklist/master/superhosts.deny.zip' && sleep 1
+
+# DIR
 function bltar() {
     wget -q -c --retry-connrefused -t 0 "$1" && for F in *.tar.gz; do R=$RANDOM ; mkdir bl/$R ; tar -C bl/$R -zxvf $F -i; done >/dev/null 2>&1
 }
 	bltar 'http://www.shallalist.de/Downloads/shallalist.tar.gz' && sleep 2
 	bltar 'http://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz' && sleep 2
 
-function blbig() {
-    wget -q -c --retry-connrefused -t 0 "$1" -O bigblacklist.tar.gz && for F in bigblacklist.tar.gz; do R=$RANDOM ; mkdir bl/$R ; tar -C bl/$R -zxvf $F -i; done >/dev/null 2>&1
-}
-	blbig 'http://urlblacklist.com/cgi-bin/commercialdownload.pl?type=download&file=bigblacklist' && sleep 2
-
 function blgz() {
     wget -q -c --retry-connrefused -t 0 "$1" && for F in *.tgz; do R=$RANDOM ; mkdir bl/$R ; tar -C bl/$R -zxvf $F -i; done >/dev/null 2>&1
 }
 	blgz 'http://squidguard.mesd.k12.or.us/blacklists.tgz' && sleep 2
+
+#function blbig() {
+    #wget -q -c --retry-connrefused -t 0 "$1" -O bigblacklist.tar.gz && for F in bigblacklist.tar.gz; do R=$RANDOM ; mkdir bl/$R ; tar -C bl/$R -zxvf $F -i; done >/dev/null 2>&1
+#}
+	#blbig 'http://urlblacklist.com/cgi-bin/commercialdownload.pl?type=download&file=bigblacklist' && sleep 2
 
 echo "OK"
 
@@ -130,24 +144,27 @@ function remoteurl() {
 
 echo "OK"
 
-# JOINT WHITELIST
+# DEBUGGING WHITELIST
 echo
-echo "Joint Whitelist..."
-sed -e '/^#/d' {whitetlds,whiteurls}.txt | sort -u > clean.txt
+echo "Debugging Whitelist..."
+sed -e '/^#/d' whitetlds.txt | sort -u > tlds.txt
+sed -e '/^#/d' {invalid,whiteurls}.txt | sort -u > urls.txt
 echo "OK"
 
-# CAPTURE AND DELETE OVERLAPPING DOMAINS
+# CAPTURE DOMAINS
 echo
 echo "Capture Domains..."
 regexd='([a-zA-Z0-9][a-zA-Z0-9-]{1,61}\.){1,}(\.?[a-zA-Z]{2,}){1,}'
-find bl -type f -execdir egrep -oi "$regexd" {} \; | awk '{print "."$1}' | sort -u | sed 's:\(www\.\|WWW\.\|ftp\.\|/.*\)::g' > urls.txt
+find bl -type f -execdir egrep -oi "$regexd" {} \; | awk '{print "."$1}' | sort -u | sed 's:\(www\.\|WWW\.\|ftp\.\|\.\.\.\|/.*\)::g' > bl.txt
 echo "OK"
+
+# DELETE OVERLAPPING DOMAINS
 echo
 echo "Delete Overlapping Domains..."
 chmod +x parse_domain.py
 python parse_domain.py | sort -u > blackweb.txt
 echo "OK"
-echo
+
 # COPY ACL TO PATH
 cp -f blackweb.txt $route >/dev/null 2>&1
 sed -e '/^#/d' blackdomains.txt >> $route/blackdomains.txt >/dev/null 2>&1 && sort -o $route/blackdomains.txt -u $route/blackdomains.txt >/dev/null 2>&1

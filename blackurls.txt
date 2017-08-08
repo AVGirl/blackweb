@@ -425,6 +425,7 @@
 .zzbuckettownrock.com
 #
 # ACORTADORES
+.44d.info
 .301.li
 .50tl.net
 .acortar.net
@@ -445,6 +446,7 @@
 .bit.do
 .bit.ly
 .bitly.com
+.budurl.co
 .clk.im
 .coinurl.com
 .cro.pm
@@ -615,6 +617,7 @@
 .redbull.tv
 .rjmetrics.com
 .shcool.vf1.us
+.sex.hu
 .smartadserver.com
 .static.chartbeat.com
 .staticxx.facebook.com
@@ -630,7 +633,13 @@
 .wibbitz.com
 .yellowbooster.info
 #
-# BAD TLDS
+# BAD DNS
+.a104270.secure.miisolutions.net
+.d19ya6dk74n9uf.cloudfront.net
+.kickstarter.com
+.tag.navdmp.com
+#
+# BAD DOMAINS
 .adult
 .beer
 .onion
@@ -641,11 +650,3 @@
 .vodka
 .whoswho
 .xxx
-#
-# BAD DNS
-.a104270.secure.miisolutions.net
-.d19ya6dk74n9uf.cloudfront.net
-.fastly.com
-.fastly.net
-.kickstarter.com
-.tag.navdmp.com
