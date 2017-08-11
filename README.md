@@ -11,7 +11,7 @@
 
 |File|BL Domains|File size|
 |----|----------|---------|
-|blackweb.txt|7.709.321|177,9 MB|
+|blackweb.txt|7.827.420|181,0 MB|
 
 ### Dependencias / Dependencies
 
@@ -23,7 +23,7 @@ git squid bash tar zip wget subversion python
 La ACL **blackweb.txt** ya viene optimizada para [Squid-Cache](http://www.squid-cache.org/). Descárguela con **blackweb.sh**. Por defecto, la ruta de **blackweb.txt** es **/etc/acl** y del script **blackweb.sh** es **/etc/init.d** / The ACL **blackweb.txt** is already optimized for [Squid-Cache](http://www.squid-cache.org/). Download it with **blackweb.sh**. By default, **blackweb.txt** path is **/etc/acl** and the script **blackweb.sh** is **/etc/init.d**
 
 ```
-wget https://github.com/maravento/blackweb/raw/master/blackweb.sh -O /etc/init.d/blackweb.sh
+wget https://raw.githubusercontent.com/maravento/blackweb/master/blackweb.sh -O /etc/init.d/blackweb.sh
 sudo chown root:root /etc/init.d/blackweb.sh && sudo chmod +x /etc/init.d/blackweb.sh
 sudo /etc/init.d/blackweb.sh
 ```
@@ -167,7 +167,7 @@ http_access deny blackweb
 
 ### Contributions
 
-Agradecemos a todos aquellos que han contribuido a este proyecto. Los interesados pueden contribuir, enviándonos enlaces de nuevas "Domains Blacklist", para ser incluidas en este proyecto / We thank all those who contributed to this project. Those interested may contribute sending us new "Domains Blacklist" links to be included in this project
+Agradecemos a todos aquellos que han contribuido a este proyecto. Los interesados pueden contribuir, enviándonos enlaces de nuevas "Blacklist", para ser incluidas en este proyecto / We thank all those who contributed to this project. Those interested may contribute sending us new "Blacklist" links to be included in this project
 
 ### Licence
 

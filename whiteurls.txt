@@ -19384,6 +19384,7 @@
 .acompli-android-logs.s3.amazonaws.com
 .acompli.helpshift.com
 .acompli.net
+.acdn.adnxs.com
 .a.config.skype.com
 .activation.sls.microsoft.com
 .activedirectory.windowsazure.com
@@ -20321,6 +20322,7 @@
 .messenger.microsoft.com
 .metaservices.microsoft.com
 .metrics.skype.com
+.m.adnxs.com
 .m.hotmail.com
 .microsoft.co
 .microsoft.com
@@ -22070,6 +22072,7 @@
 .gateshead.gov.uk
 .genome.gov
 .georgetownky.gov
+.geoportal.igac.gov.co
 .georgia.gov
 .gilbertaz.gov
 .ginniemae.gov
@@ -26703,6 +26706,7 @@
 .descargas.eset.es
 .docs.kaspersky-labs.com
 .download.geo.drweb.com
+.download.mcafee.com
 .emupdate.avast.com
 .eset.co.il
 .eset.com
@@ -27290,6 +27294,8 @@
 .simit.org.co
 .simple.co
 .slideshare.net
+.sld.cu
+.scielo.sld.cu
 .snapcraft.io
 .snippets-stats.mozilla.org
 .soatadomicilio.co
